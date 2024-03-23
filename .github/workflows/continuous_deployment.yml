@@ -4,7 +4,8 @@ on:
     branches: [main]
     workflows: [Continuous integration]
     types: [completed]
-
+permissions:
+  contents: write
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -16,8 +17,8 @@ jobs:
 
       - uses: jetli/trunk-action@v0.1.0
       - uses: jetli/wasm-bindgen-action@v0.1.0
-
-      - uses: actions/checkout@v2
+      - name: Check out this repo
+        uses: actions/checkout@v2
 
       - run: trunk build --release
 
