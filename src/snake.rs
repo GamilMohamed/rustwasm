@@ -26,7 +26,7 @@ extern "C" {
 }
 
 
-pub type Position = (usize, usize);
+pub type Position = (i32, i32);
 
 #[derive(Debug, Clone, Copy)]
 pub enum Direction {
@@ -38,8 +38,8 @@ pub enum Direction {
 
 #[derive(Debug)]
 pub struct SnakeGame {
-  pub width: usize,
-  pub height: usize,
+  pub width: i32,
+  pub height: i32,
   pub snake: VecDeque<Position>, // Head is the first item, tail is the last item
   pub direction: Direction,
   next_direction: Direction,
@@ -48,7 +48,7 @@ pub struct SnakeGame {
 }
 
 impl SnakeGame {
-  pub fn new(width: usize, height: usize) -> Self {
+  pub fn new(width: i32, height: i32) -> Self {
     Self {
       width,
       height,
@@ -79,28 +79,47 @@ impl SnakeGame {
   }
 
   pub fn is_valid(&self, (x, y): Position) -> bool {
-    x < self.width && y < self.height
+    x < self.width && y < self.height && x >= 0 && y >= 0
   }
 
   pub fn tick(&mut self) {
     if self.finished && self.snake.len() == 0 {
       return;
     }
-    log(&format!("test {:?}", self.snake));
+    // log(&format!("test {:?}", self.snake));
     // println!("test {:?}", self.snake);
     self.direction = self.next_direction;
 
     let (x, y) = self.snake[0];
     // WARNING: There's no explicit underflow handling here
     // (will panic in debug build)
-    let new_head = match self.direction {
+    let mut new_head = match self.direction {
       Direction::Up => (x, y - 1),
       Direction::Right => (x + 1, y),
       Direction::Down => (x, y + 1),
       Direction::Left => (x - 1, y),
     };
-
-    if !self.is_valid(new_head) || self.snake.contains(&new_head) {
+    if !self.is_valid(new_head)
+    {
+      log(&format!("new_head {:?}", new_head));
+      if new_head.0 >= self.width {
+        new_head.0 = 0;
+        log(&format!("new_head.0 >= self.width {}  {}",new_head.0,self.width));
+      }
+      if new_head.1 >= self.height {
+        new_head.1 = 0;
+        log(&format!("new_head.1 >= self.height {}  {}",new_head.1,self.height));
+      }
+      if new_head.0 < 0 {
+        new_head.0 = self.width - 1;
+        log(&format!("new_head.0 < 0 {}  {}",new_head.0,self.width));
+      }
+      if new_head.1 < 0 {
+        new_head.1 = self.height - 1;
+        log(&format!("new_head.1 < 0 {}  {}",new_head.1,self.height));
+      }
+    }
+    if self.snake.contains(&new_head) {
       // Lose conditions
       self.finished = true;
     } else {
@@ -132,6 +151,6 @@ mod tests {
 
   #[test]
   fn test() {
-    println!("{:?}", SnakeGame::new(10, 10));
+    println!("{:?}", SnakeGame::new(15, 15));
   }
 }

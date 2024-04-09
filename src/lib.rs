@@ -24,7 +24,7 @@ extern "C" {
 
 thread_local! {
   static GAME: Rc<RefCell<SnakeGame>> =
-    Rc::new(RefCell::new(SnakeGame::new(15, 15)));
+    Rc::new(RefCell::new(SnakeGame::new(20, 20)));
 
   static HANDLE_TICK: Closure<dyn FnMut()> = Closure::wrap(Box::new(|| {
     GAME.with(|game| game.borrow_mut().tick());
@@ -54,7 +54,7 @@ pub fn main() {
       .unwrap_throw()
       .set_interval_with_callback_and_timeout_and_arguments_0(
         tick_closure.as_ref().dyn_ref::<Function>().unwrap_throw(),
-        200,
+        45,
       )
       .unwrap_throw()
   });
