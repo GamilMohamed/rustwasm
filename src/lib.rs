@@ -7,6 +7,21 @@ use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::{prelude::*, JsCast, UnwrapThrowExt};
 use web_sys::{window, HtmlDivElement, HtmlElement, KeyboardEvent};
 
+
+#[wasm_bindgen]
+extern "C" {
+  #[wasm_bindgen(js_namespace = console)]
+  fn log(s: &str);
+
+  #[wasm_bindgen(js_namespace = console, js_name = log)]
+  fn log_u32(a: u32);
+
+  // Multiple arguments too!
+  #[wasm_bindgen(js_namespace = console, js_name = log)]
+  fn log_many(a: &str, b: &str);
+}
+
+
 thread_local! {
   static GAME: Rc<RefCell<SnakeGame>> =
     Rc::new(RefCell::new(SnakeGame::new(15, 15)));
