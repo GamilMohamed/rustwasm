@@ -123,7 +123,17 @@ pub fn render() {
         });
 
         root_container.append_child(&field_element).unwrap_throw();
+        
       }
     }
+    let scorefield = document
+      .create_element("div")
+      .unwrap_throw()
+      .dyn_into::<HtmlDivElement>()
+      .unwrap_throw();
+    scorefield.set_class_name("score field");
+    scorefield.set_inner_text(&format!("Score: {}", game.score));
+    root_container.append_child(&scorefield).unwrap_throw();
+    
   });
 }

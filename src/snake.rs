@@ -45,6 +45,7 @@ pub struct SnakeGame {
   next_direction: Direction,
   pub food: Position,
   pub finished: bool,
+  pub score: i32,
 }
 
 impl SnakeGame {
@@ -57,6 +58,7 @@ impl SnakeGame {
       next_direction: Direction::Left,
       food: (2.min(width - 1), height / 2),
       finished: false,
+      score: 0,
     }
   }
 
@@ -138,6 +140,7 @@ impl SnakeGame {
         }
 
         self.food = free_positions[random_range(0, free_positions.len())];
+        self.score += 1;
       }
 
       self.snake.push_front(new_head);
